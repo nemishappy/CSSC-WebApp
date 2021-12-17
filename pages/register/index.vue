@@ -12,10 +12,6 @@
       <h3>Create Your FireBlog Account</h3>
       <div class="inputs">
         <div class="input">
-          <input type="text" placeholder="Username" v-model="username" />
-          <v-icon small class="icon">person</v-icon>
-        </div>
-        <div class="input">
           <input type="text" placeholder="First Name/ชื่อ" v-model="firstName" />
           <v-icon small class="icon">person</v-icon>
         </div>
@@ -47,11 +43,15 @@
 <script>
 import Overlay from '~/components/Overlay'
 export default {
+  head() {
+    return {
+      title: 'Register',
+    }
+  },
   data() {
     return {
       firstName: '',
       lastName: '',
-      username: '',
       batch: '',
       email: '',
       password: '',
@@ -69,8 +69,7 @@ export default {
         this.password !== '' &&
         this.batch !== '' &&
         this.firstName !== '' &&
-        this.lastName !== '' &&
-        this.username !== ''
+        this.lastName !== '' 
       ) {
         this.$store.dispatch('toggleOverlay')
         this.error = false
@@ -85,7 +84,6 @@ export default {
         await dataBase.set({
           firstName: this.firstName,
           lastName: this.lastName,
-          username: this.username,
           batch: this.batch,
           email: this.email,
         })

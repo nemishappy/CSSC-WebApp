@@ -65,4 +65,48 @@ export default {
   color: red;
   background-color: transparent !important;
 }
+.blog-card-wrap {
+  position: relative;
+  padding: 80px 16px;
+  background-color: #f1f1f1;
+  @media (min-width: 500px) {
+    padding: 80px 16px;
+  }
+
+  .blog-cards {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+    margin: 10px;
+    @media (min-width: 500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+.module-border-wrap {
+  display: flex;
+  justify-content: center;
+  border: 10px transparent;
+  border-radius: 100%;
+  background-image: linear-gradient(
+    128deg,
+    rgb(255, 136, 0),
+    rgb(240, 62, 240)
+  );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  padding: 10px;
+
+  img {
+    padding: 2px;
+    border-radius: 50%;
+  }
+}
 </style>

@@ -6,7 +6,7 @@ export const state = () => ({
   },
   overlay: false,
   user: null,
-  userLoadded : false,
+  userLoadded: false,
 })
 
 export const getters = {
@@ -19,9 +19,9 @@ export const getters = {
   getUser(state) {
     return state.user
   },
-  getUserLoadded(state){
+  getUserLoadded(state) {
     return state.userLoadded
-  }
+  },
 }
 
 export const mutations = {
@@ -34,10 +34,10 @@ export const mutations = {
   SET_OVERLAY(state) {
     state.overlay = !state.overlay
   },
-  SET_USER(state, payload) {    
+  SET_USER(state, payload) {
     state.user = payload
   },
-  SET_USERLOADDED(state, payload) {    
+  SET_USERLOADDED(state, payload) {
     state.userLoadded = payload
   },
 }
@@ -49,7 +49,7 @@ export const actions = {
   toggleOverlay({ commit }) {
     commit('SET_OVERLAY')
   },
-  async onAuthStateChangedAction ({ commit }, { authUser, claims }) {
+  async onAuthStateChangedAction({ commit, dispatch }, { authUser, claims }) {
     commit('SET_USERLOADDED', false)
     if (!authUser) {
       // claims = null
@@ -58,10 +58,31 @@ export const actions = {
       console.log('logout')
       this.$router.push({ name: 'home' })
     } else {
-      
       const { uid, email } = authUser
-      commit('SET_USER', { uid, email })
+      await dispatch("setUser", { uid, email })
     }
     commit('SET_USERLOADDED', true)
+  },
+  async setUser({ commit }, data) {
+    const dataBase = this.$fire.firestore.collection('users').doc(data.uid)
+    await dataBase
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          commit('SET_USER', {
+            uid: data.uid,
+            email: data.email,
+            firstname: doc.data().firstName,
+            lastname: doc.data().lastName,
+            name: doc.data().name,
+            batch: doc.data().batch,
+          })
+        } else {
+          console.log('No such user!')
+        }
+      })
+      .catch((error) => {
+        console.log('Error getting document:', error)
+      })
   },
 }

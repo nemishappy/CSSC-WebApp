@@ -30,6 +30,11 @@
 import Overlay from '~/components/Overlay'
 import Dialog from '~/components/Dialog'
 export default {
+  head() {
+    return {
+      title: 'Forgot Pawword',
+    }
+  },
   data() {
     return {
       email: '',

@@ -13,7 +13,7 @@
           <NuxtLink to="/home"> <p>Home</p> </NuxtLink>
         </div>
         <div class="option">
-          <NuxtLink to="/home"> <p>Blogs</p> </NuxtLink>
+          <NuxtLink to="/blogs"> <p>Blogs</p> </NuxtLink>
         </div>
         <div v-if="user" class="option">
           <NuxtLink to="/createpost">
@@ -33,9 +33,7 @@
             offset-x
           >
             <template v-slot:activator="{ on, attrs }">
-              <p v-bind="attrs" v-on="on">
-                Profile
-              </p>
+              <p v-bind="attrs" v-on="on">Profile</p>
             </template>
 
             <v-card>
@@ -49,11 +47,14 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title>John Leider</v-list-item-title>
-                    <v-list-item-subtitle
-                      >Founder of Vuetify</v-list-item-subtitle
+                    <v-list-item-title
+                      >{{ user.firstname }}
+                      {{ user.lastname }}</v-list-item-title
                     >
-                  </v-list-item-content>      
+                    <v-list-item-subtitle
+                      >CS {{ user.batch }}</v-list-item-subtitle
+                    >
+                  </v-list-item-content>
                 </v-list-item>
               </v-list>
 
@@ -61,7 +62,11 @@
 
               <v-list>
                 <v-list-item>
-                  profile
+                  <div class="option-profile">
+                    <NuxtLink to="/profile">
+                      <p>My Profile</p>
+                    </NuxtLink>
+                  </div>
                 </v-list-item>
               </v-list>
 
@@ -120,11 +125,11 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.getters.getUser
     },
-    userLoadded(){
-      return this.$store.getters.getUserLoadded;
-    }
+    userLoadded() {
+      return this.$store.getters.getUserLoadded
+    },
   },
   methods: {
     toggleMobileNav() {
@@ -160,4 +165,21 @@ export default {
     }
   }
 }
+.option-profile {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    a {
+      text-decoration: none;
+      color: rgb(20, 20, 20);
+    }
+    .icon {
+      width: 18px;
+      height: auto;
+    }
+    p {
+      font-size: 14px;
+      margin: 0;
+    }
+  }
 </style>
