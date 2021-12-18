@@ -3,7 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - CSSC-WebApp',
+    titleTemplate: '%s - CSSC',
     title: 'CSSC-WebApp',
     htmlAttrs: {
       lang: 'en',
@@ -40,6 +40,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/svg',
   ],
   router: {
     middleware: ['auth']
@@ -68,6 +69,7 @@ export default {
             }
           },
           firestore: true,
+          storage: true,
         },
       },
     ],

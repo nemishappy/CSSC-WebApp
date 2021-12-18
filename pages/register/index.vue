@@ -1,6 +1,5 @@
 <template>
   <div class="form-wrap">
-    
     <Overlay />
     <form class="register">
       <p class="login-register">
@@ -12,17 +11,25 @@
       <h3>Create Your FireBlog Account</h3>
       <div class="inputs">
         <div class="input">
-          <input type="text" placeholder="First Name/ชื่อ" v-model="firstName" />
+          <input
+            type="text"
+            placeholder="First Name/ชื่อ"
+            v-model="firstName"
+          />
           <v-icon small class="icon">person</v-icon>
         </div>
         <div class="input">
-          <input type="text" placeholder="Last Name/นามสกุล" v-model="lastName" />
+          <input
+            type="text"
+            placeholder="Last Name/นามสกุล"
+            v-model="lastName"
+          />
           <v-icon small class="icon">person</v-icon>
         </div>
         <div class="input">
           <input type="number" placeholder="CS Batch/รุ่นที่" v-model="batch" />
           <v-icon small class="icon">group</v-icon>
-        </div>        
+        </div>
         <div class="input">
           <input type="text" placeholder="Email" v-model="email" />
           <v-icon small class="icon">email</v-icon>
@@ -69,7 +76,7 @@ export default {
         this.password !== '' &&
         this.batch !== '' &&
         this.firstName !== '' &&
-        this.lastName !== '' 
+        this.lastName !== ''
       ) {
         this.$store.dispatch('toggleOverlay')
         this.error = false
@@ -80,12 +87,21 @@ export default {
           this.password
         )
         const result = await createUser
-        const dataBase = this.$fire.firestore.collection('users').doc(result.user.uid)
+        const dataBase = this.$fire.firestore
+          .collection('users')
+          .doc(result.user.uid)
         await dataBase.set({
-          firstName: this.firstName,
-          lastName: this.lastName,
+          firstname: this.firstName,
+          lastname: this.lastName,
           batch: this.batch,
           email: this.email,
+          name: '',
+          bio: '',
+          pictureUrl: '',
+          facebook: '',
+          line: '',
+          github: '',
+          linkedin: '',
         })
         this.$store.dispatch('toggleOverlay')
         this.$router.push({ name: 'register-done' })

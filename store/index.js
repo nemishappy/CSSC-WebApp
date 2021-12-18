@@ -55,28 +55,38 @@ export const actions = {
       // claims = null
       // Perform logout operations
       commit('SET_USER', null)
+      commit('SET_USERLOADDED', true)
       console.log('logout')
       this.$router.push({ name: 'home' })
     } else {
-      const { uid, email } = authUser
-      await dispatch("setUser", { uid, email })
+      const { uid } = authUser
+      await dispatch('setUserByUID', uid)
+      return
     }
-    commit('SET_USERLOADDED', true)
   },
-  async setUser({ commit }, data) {
-    const dataBase = this.$fire.firestore.collection('users').doc(data.uid)
+  async setUserByUID({ commit }, data) {
+    commit('SET_USERLOADDED', false)
+    const dataBase = this.$fire.firestore.collection('users').doc(data)
     await dataBase
       .get()
       .then((doc) => {
         if (doc.exists) {
-          commit('SET_USER', {
-            uid: data.uid,
-            email: data.email,
-            firstname: doc.data().firstName,
-            lastname: doc.data().lastName,
-            name: doc.data().name,
-            batch: doc.data().batch,
-          })
+          var obj = doc.data()
+          obj['uid'] = data
+          // commit('SET_USER', {
+          //   uid: data.uid,
+          //   email: doc.data().email,
+          //   firstname: doc.data().firstname,
+          //   lastname: doc.data().lastname,
+          //   name: doc.data().name,
+          //   bio: doc.data().bio,
+          //   pictureUrl: doc.data().pictureUrl,
+          //   facebook: doc.data().facebook,
+          //   line: doc.data().line,
+          //   github: doc.data().github,
+          //   linkedin: doc.data().linkedin,
+          // })
+          commit('SET_USER', obj)
         } else {
           console.log('No such user!')
         }
@@ -84,5 +94,6 @@ export const actions = {
       .catch((error) => {
         console.log('Error getting document:', error)
       })
+    commit('SET_USERLOADDED', true)
   },
 }

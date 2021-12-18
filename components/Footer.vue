@@ -4,21 +4,15 @@
       <div class="left">
         <div class="col-1">
           <router-link class="header" :to="{ name: 'home' }"
-            >FireBlogs</router-link
+            >CSShowcase</router-link
           >
           <ul>
             <a href="#">
-              <img class="svg-icon" src="~/assets/Icons/youtube-brands.svg" />
+              <div v-html="youTube" class="svg-icon"></div>
             </a>
-            <a href="#"
-              ><img class="svg-icon" src="~/assets/Icons/twitter-brands.svg"
-            /></a>
-            <a href="#"
-              ><img class="svg-icon" src="~/assets/Icons/instagram-brands.svg"
-            /></a>
-            <a href="#"
-              ><img class="svg-icon" src="~/assets/Icons/linkedin-brands.svg"
-            /></a>
+            <a href="#"><div v-html="twitter" class="svg-icon"></div> </a>
+            <a href="#"><div v-html="instagram" class="svg-icon"></div> </a>
+            <a href="#"><div v-html="linkedin" class="svg-icon"></div> </a>
           </ul>
         </div>
       </div>
@@ -30,19 +24,22 @@
 </template>
 
 <script>
-import youTube from '~/components/icons/Youtube'
-import twitter from '~/assets/Icons/twitter-brands.svg'
-import instagram from '~/assets/Icons/instagram-brands.svg'
-import linkedin from '~/assets/Icons/linkedin-brands.svg'
+import youTube from '~/assets/Icons/youtube-brands.svg?raw'
+import twitter from '~/assets/Icons/twitter-brands.svg?raw'
+import instagram from '~/assets/Icons/instagram-brands.svg?raw'
+import linkedin from '~/assets/Icons/linkedin-brands.svg?raw'
+
 export default {
   name: 'footer-vue',
-  components: {
-    youTube,
-    twitter,
-    instagram,
-    linkedin,
+
+  data() {
+    return {
+      youTube,
+      twitter,
+      instagram,
+      linkedin,
+    }
   },
-  computed: {},
 }
 </script>
 

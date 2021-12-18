@@ -27,7 +27,8 @@ export default {
     BlogCard,
   },
   data() {
-    return {
+    return {        
+      editPost: true,
       sampleCards: [
         { blogTitle: 'Blog Card 1', blockCoverphoto: 'stock-1', writer: 'nnn' },
         { blogTitle: 'Blog Card 2', blockCoverphoto: 'stock-1', writer: 'nnn' },
@@ -54,8 +55,8 @@ export default {
     -webkit-appearance: none;
     background: #fff;
     outline: none;
-    width: 80px;
-    height: 30px;
+    width: 40px;
+    height: 15px;
     border-radius: 20px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -64,9 +65,9 @@ export default {
   input[type='checkbox']:before {
     content: '';
     position: absolute;
-    width: 30px;
-    height: 30px;
-    border-radius: 20px;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
     top: 0;
     left: 0;
     background: #303030;
@@ -78,7 +79,7 @@ export default {
 
   input:checked[type='checkbox']:before {
     background: #fff;
-    left: 52px;
+    left: 26px;
   }
 }
 </style>

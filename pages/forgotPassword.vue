@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import Overlay from '~/components/Overlay'
 import Dialog from '~/components/Dialog'
+import Overlay from '~/components/Overlay'
 export default {
   head() {
     return {
@@ -41,8 +41,8 @@ export default {
     }
   },
   components: {
-    Overlay,
     Dialog,
+    Overlay,
   },
   methods: {
     resetPassword() {

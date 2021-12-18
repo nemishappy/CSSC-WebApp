@@ -33,7 +33,16 @@
             offset-x
           >
             <template v-slot:activator="{ on, attrs }">
-              <p v-bind="attrs" v-on="on">Profile</p>
+              <div v-bind="attrs" v-on="on">
+                <v-avatar size="36">
+                  <img
+                    v-if="!user.pictureUrl"
+                    src="~/assets/profile.png"
+                    alt=""
+                  />
+                  <img v-else :src="user.pictureUrl" alt="" />
+                </v-avatar>
+              </div>
             </template>
 
             <v-card>
@@ -41,9 +50,11 @@
                 <v-list-item>
                   <v-list-item-avatar>
                     <img
-                      src="https://cdn.vuetifyjs.com/images/john.jpg"
-                      alt="John"
+                      v-if="!user.pictureUrl"
+                      src="~/assets/profile.png"
+                      alt=""
                     />
+                    <img v-else :src="user.pictureUrl" alt="" />
                   </v-list-item-avatar>
 
                   <v-list-item-content>
@@ -62,9 +73,16 @@
 
               <v-list>
                 <v-list-item>
-                  <div class="option-profile">
+                  <div class="option-profile" @click="menu = false">
                     <NuxtLink to="/profile">
                       <p>My Profile</p>
+                    </NuxtLink>
+                  </div>
+                </v-list-item>
+                <v-list-item>
+                  <div class="option-profile" @click="menu = false">
+                    <NuxtLink to="/editprofile">
+                      <p>Settings</p>
                     </NuxtLink>
                   </div>
                 </v-list-item>
@@ -166,20 +184,20 @@ export default {
   }
 }
 .option-profile {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    a {
-      text-decoration: none;
-      color: rgb(20, 20, 20);
-    }
-    .icon {
-      width: 18px;
-      height: auto;
-    }
-    p {
-      font-size: 14px;
-      margin: 0;
-    }
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  a {
+    text-decoration: none;
+    color: rgb(20, 20, 20);
   }
+  .icon {
+    width: 18px;
+    height: auto;
+  }
+  p {
+    font-size: 14px;
+    margin: 0;
+  }
+}
 </style>
