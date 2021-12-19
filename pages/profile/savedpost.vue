@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h2 class="ma-3">Blogs Post</h2>
-    
-    <div class="d-flex align-content-space-around flex-wrap mb-13">
+    <h2 class="ma-3">Saved Post</h2>
+    <div class="toggle-edit ma-3">
+      <span>Toggle Editing Post</span>
+      <input type="checkbox" v-model="editPost" />
+    </div>
+    <div class="d-flex align-content-space-around flex-wrap">
       <BlogCardSafe
         :post="post"
         class="mx-auto"
@@ -24,18 +27,29 @@ export default {
   components: {
     BlogCardSafe,
   },
-  computed:{
-    blogPosts(){
-      return this.$store.getters.getBlogPosts;
-    }
+  computed: {
+    blogPosts() {
+      return this.$store.getters.getSavedPosts
+    },
+    editPost: {
+      get() {
+        return this.$store.getters.getEditPost
+      },
+      set(payload) {
+        this.$store.dispatch('toggleEditPost')
+      },
+    },
   },
   async mounted() {
-    await this.$store.dispatch('setBlogPosts')
+    await this.$store.dispatch('setSavedPosts')
+  },
+  beforeDestroy() {
+    if (!this.editPost) this.$store.dispatch('toggleEditPost')
   },
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .toggle-edit {
   display: flex;
   align-items: center;
@@ -76,25 +90,5 @@ export default {
     background: #fff;
     left: 26px;
   }
-}
-blockquote {
-    margin: 0;
-}
-
-blockquote  {
-    padding: 15px;
-    background: #eee;
-    border-radius: 5px;
-}
-
-blockquote ::before {
-    content: '\201C';
-}
-
-blockquote ::after {
-    content: '\201D';
-}
-.ql-editor p, .ql-editor ol, .ql-editor ul, .ql-editor pre, .ql-editor blockquote, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6{
-  padding: 15px;  
 }
 </style>

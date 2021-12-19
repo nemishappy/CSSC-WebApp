@@ -8,7 +8,7 @@
         <v-slide-group multiple show-arrows>
           <v-slide-item>
             <div class="blog-cards">
-              <BlogCard
+              <BlogCardSafe
                 :post="post"
                 v-for="(post, index) in blogPostCards"
                 :key="index"
@@ -34,11 +34,11 @@
 
 <script>
 import BlogPost from '~/components/BlogPost'
-import BlogCard from '~/components/BlogCard'
+import BlogCardSafe from '~/components/BlogCardSafe'
 export default {
   components: {
     BlogPost,
-    BlogCard,
+    BlogCardSafe,
   },
   computed:{
     user() {

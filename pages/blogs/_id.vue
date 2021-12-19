@@ -15,7 +15,9 @@
               />
               <img v-else :src="user.pictureUrl" class="avatar" alt="" />
             </v-avatar>
-            <div class="mx-3 text-primary name-text" v-if="user.name">@{{ user.name }}</div>
+            <div class="mx-3 text-primary name-text" v-if="user.name">
+              @{{ user.name }}
+            </div>
             <div class="mx-3 text-primary name-text" v-else>
               {{ user.firstname }} {{ user.lastname }}
             </div>
@@ -28,8 +30,10 @@
             }}
           </div>
         </div>
-        <div>
-          <v-btn icon> <v-icon>bookmark_add</v-icon> </v-btn>
+        <div v-if="userLogin">
+          <v-btn icon @click="addToSaved">
+            <v-icon>bookmark_add</v-icon>
+          </v-btn>
         </div>
       </div>
       <img :src="post.blogCoverPhoto" alt="" />
@@ -42,14 +46,27 @@
       <div class="d-flex">
         <h3>
           More from
-          <div v-if="user.name" class="profile text-primary" @click="toProfile">@{{ user.name }}</div>
-          <div v-else class="profile text-primary" @click="toProfile">{{ user.firstname }} {{ user.lastname }}</div>
+          <div v-if="user.name" class="profile text-primary" @click="toProfile">
+            @{{ user.name }}
+          </div>
+          <div v-else class="profile text-primary" @click="toProfile">
+            {{ user.firstname }} {{ user.lastname }}
+          </div>
         </h3>
       </div>
       <div>
         <v-btn rounded color="primary" class="no-uppercase"> Follow </v-btn>
       </div>
     </div>
+    <v-snackbar v-model="snackbar">
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -64,13 +81,20 @@ export default {
     return {
       routeID: '',
       post: { blogTitle: '' },
-      uid:'',
+      uid: '',
       user: '',
+      snackbar: false,
+      text: '',
     }
   },
   async created() {
     this.routeID = this.$route.params.id
     await this.getPost()
+  },
+  computed: {
+    userLogin() {
+      return this.$store.getters.getUser
+    },
   },
   methods: {
     async getPost() {
@@ -104,6 +128,11 @@ export default {
         name: 'profile-id',
         params: { id: this.uid },
       })
+    },
+    addToSaved() {
+      this.$store.dispatch('addSavedPosts', this.routeID)
+      this.text = `Add ${this.post.blogTitle} to Saved.`
+      this.snackbar = true
     },
   },
 }
@@ -149,7 +178,7 @@ export default {
     }
   }
 }
-.profile{
+.profile {
   cursor: pointer;
 }
 </style>

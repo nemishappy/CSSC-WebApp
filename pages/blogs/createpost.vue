@@ -156,7 +156,7 @@ export default {
                 .doc(this.profileId)
                 .collection('posts')
                 .doc(dataBase.id)
-              await userDataBase.set({ blogTitle: this.blogTitle })
+              await userDataBase.set({ blogTitle: this.blogTitle , date: timestamp})
 
               this.$store.dispatch('toggleOverlay')
               this.$store.dispatch('clearPost')

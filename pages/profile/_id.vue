@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user">
+  <div v-if="profile.email">
     <v-list>
       <v-list-item class="px-2">
         <div class="module-border-wrap">

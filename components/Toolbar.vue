@@ -5,7 +5,7 @@
         class="hidden-md-and-up"
         @click="toggleMobileNav"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-left">CSSC</v-toolbar-title>
+      <v-toolbar-title class="text-left title" @click="toHome">CSSC</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <div v-if="userLoadded" class="options hidden-sm-and-down">
@@ -15,17 +15,17 @@
         <div class="option">
           <NuxtLink to="/blogs"> <p>Blogs</p> </NuxtLink>
         </div>
-        <div v-if="user" class="option">
+        <div v-if="user.uid" class="option">
           <NuxtLink to="/blogs/createpost">
             <p>Create Post</p>
           </NuxtLink>
         </div>
-        <div v-if="!user" class="option">
+        <div v-if="!user.uid" class="option">
           <NuxtLink to="/login">
             <p>login</p>
           </NuxtLink>
         </div>
-        <div v-if="user" class="option">
+        <div v-if="user.uid" class="option">
           <v-menu
             v-model="menu"
             :close-on-content-click="false"
@@ -85,6 +85,15 @@
                   </div>
                 </v-list-item>
                 <v-list-item>
+                  <v-list-item-title
+                    ><div class="option-mobile">
+                      <NuxtLink to="/profile/savedpost">
+                        <p>Saved</p>
+                      </NuxtLink>
+                    </div></v-list-item-title
+                  >
+                </v-list-item>
+                <v-list-item>
                   <div class="option-profile" @click="menu = false">
                     <NuxtLink to="/profile/editprofile">
                       <p>Settings</p>
@@ -124,7 +133,7 @@
             >
           </v-list-item>
 
-          <v-list-item v-if="user">
+          <v-list-item v-if="user.uid">
             <v-list-item-title
               ><div class="option-mobile">
                 <NuxtLink to="/blogs/createpost"> <p>Create Post</p> </NuxtLink>
@@ -140,7 +149,7 @@
             >
           </v-list-item>
           <v-divider></v-divider>
-          <div v-if="user">
+          <div v-if="user.uid">
             <v-list-item>
               <v-list-item-title
                 ><div class="option-mobile">
@@ -151,6 +160,15 @@
                     }"
                   >
                     <p>My Profile</p>
+                  </NuxtLink>
+                </div></v-list-item-title
+              >
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title
+                ><div class="option-mobile">
+                  <NuxtLink to="/profile/savedpost">
+                    <p>Saved</p>
                   </NuxtLink>
                 </div></v-list-item-title
               >
@@ -208,10 +226,16 @@ export default {
       this.menu = false
       // this.$router.push({ name: 'home' })
     },
+    toHome(){
+      this.$router.push({ name: 'home' })
+    }
   },
 }
 </script>
 <style lang="scss" scoped>
+.title{
+  cursor: pointer;
+}
 .options {
   display: flex;
   padding: 15px 0px;
