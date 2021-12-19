@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="mx-auto my-3 blog-card"
-    v-if="user"
-  >
+  <v-card class="mx-auto my-3 blog-card" v-if="user">
     <v-img
       class="white--text align-end"
       height="200px"
@@ -23,8 +20,12 @@
       :src="post.blogCoverPhoto"
     >
       <div v-if="!editPost">
-        <div class="card-icon"><v-icon class="icon" @click="editBlogPost()">edit</v-icon></div>
-        <div class="card-icon"><v-icon class="icon">delete</v-icon></div>
+        <div class="card-icon">
+          <v-icon class="icon" @click="editBlogPost()">edit</v-icon>
+        </div>
+        <div class="card-icon">
+          <v-icon class="icon" @click="deleteBlogPost()">delete</v-icon>
+        </div>
       </div>
     </v-img>
     <v-card-subtitle class="pb-0 d-flex align-center">
@@ -40,17 +41,7 @@
       <div class="mx-3" v-if="user.name">@{{ user.name }}</div>
       <div class="mx-3" v-else>{{ user.firstname }} {{ user.lastname }}</div>
     </v-card-subtitle>
-    <!-- <v-list>
-      <v-list-item>
-        <v-list-item-avatar>
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-        </v-list-item-avatar>
 
-        <v-list-item-content>
-          <v-list-item-subtitle>{{ post.writer }}</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list> -->
     <v-card-title>{{ post.blogTitle }}</v-card-title>
 
     <v-card-text class="text--primary">
@@ -90,12 +81,16 @@ export default {
     })
   },
   methods: {
-    editBlogPost(){
+    editBlogPost() {
       this.$router.push({
         name: 'blogs-editpost-id',
         params: { id: this.post.blogID },
       })
-    }
+    },
+    deleteBlogPost() {
+      this.$store.dispatch('deletePost', this.post.blogID)
+      this.$emit('deletePost', this.post.blogID)
+    },
   },
 }
 </script>
@@ -141,8 +136,8 @@ export default {
     max-width: 300px;
     &.avatar {
       min-height: 0px;
-      
-    object-fit: cover;
+
+      object-fit: cover;
     }
   }
   .link {

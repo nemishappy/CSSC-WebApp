@@ -108,7 +108,7 @@ export const mutations = {
     }
   },
   FILTER_BLOGPOST(state, payload) {
-    state.blogPosts = state.blogPosts.filter((post) => post.blogID !== payload);
+    state.blogPosts = state.blogPosts.filter((post) => post.blogID !== payload)
   },
 }
 
@@ -190,7 +190,27 @@ export const actions = {
     commit('SET_POSTLOADED', true)
   },
   async updatePost({ commit, dispatch }, data) {
-    commit("FILTER_BLOGPOST", data);
-    await dispatch("setBlogPosts");
+    commit('FILTER_BLOGPOST', data)
+    await dispatch('setBlogPosts')
+  },
+  async deletePost({ commit, getters }, payload) {
+    const userPost = await this.$fire.firestore
+      .collection('users')
+      .doc(getters.getUser.uid)
+      .collection('posts')
+      .doc(payload)
+    await userPost
+      .delete()
+      .then(() => {
+        console.log('Document successfully deleted!')
+      })
+      .catch((error) => {
+        console.error('Error removing document: ', error)
+      })
+    const getPost = await this.$fire.firestore
+      .collection('blogPosts')
+      .doc(payload)
+    await getPost.delete()
+    commit('FILTER_BLOGPOST', payload)
   },
 }

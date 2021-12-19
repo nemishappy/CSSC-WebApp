@@ -5,7 +5,6 @@
         ref="editor"
         v-model.lazy="editedContent"
         :options="editorOption"
-        @ready="onEditorReady($event)"
         @change="debounceTextChange"
       />
     </client-only>
@@ -51,9 +50,6 @@ export default {
     }
   },
   methods: {
-    onEditorReady(editor) {
-      console.log('editor ready!', editor)
-    },
     debounceTextChange: debounce(function () {
       this.$emit('text-change', this.editedContent)
     }, 2000),

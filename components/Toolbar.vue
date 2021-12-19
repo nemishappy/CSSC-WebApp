@@ -74,7 +74,12 @@
               <v-list>
                 <v-list-item>
                   <div class="option-profile" @click="menu = false">
-                    <NuxtLink to="/profile">
+                    <NuxtLink
+                      :to="{
+                        name: 'profile-id',
+                        params: { id: this.user.uid },
+                      }"
+                    >
                       <p>My Profile</p>
                     </NuxtLink>
                   </div>
@@ -104,20 +109,65 @@
           active-class="primary--text text--accent-4"
         >
           <v-list-item>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title>
+              <div class="option-mobile">
+                <NuxtLink to="/home"> <p>Home</p> </NuxtLink>
+              </div>
+            </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>Blogs</v-list-item-title>
+            <v-list-item-title
+              ><div class="option-mobile">
+                <NuxtLink to="/blogs"> <p>Blogs</p> </NuxtLink>
+              </div></v-list-item-title
+            >
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title>Create Post</v-list-item-title>
+          <v-list-item v-if="user">
+            <v-list-item-title
+              ><div class="option-mobile">
+                <NuxtLink to="/blogs/createpost"> <p>Create Post</p> </NuxtLink>
+              </div></v-list-item-title
+            >
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title>Login/Register</v-list-item-title>
+          <v-list-item v-else>
+            <v-list-item-title
+              ><div class="option-mobile">
+                <NuxtLink to="/login"> <p>Login/Register</p> </NuxtLink>
+              </div></v-list-item-title
+            >
           </v-list-item>
+          <v-divider></v-divider>
+          <div v-if="user">
+            <v-list-item>
+              <v-list-item-title
+                ><div class="option-mobile">
+                  <NuxtLink
+                    :to="{
+                      name: 'profile-id',
+                      params: { id: this.user.uid },
+                    }"
+                  >
+                    <p>My Profile</p>
+                  </NuxtLink>
+                </div></v-list-item-title
+              >
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title
+                ><div class="option-mobile">
+                  <NuxtLink to="/profile/editprofile">
+                    <p>Settings</p>
+                  </NuxtLink>
+                </div></v-list-item-title
+              >
+            </v-list-item>
+            <v-list-item>
+              <v-btn class="no-uppercase" block @click="logout"> Logout </v-btn>
+            </v-list-item>
+          </div>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -181,6 +231,23 @@ export default {
       font-size: 14px;
       margin: 0;
     }
+  }
+}
+.option-mobile {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  a {
+    text-decoration: none;
+    color: rgb(20, 20, 20);
+  }
+  .icon {
+    width: 18px;
+    height: auto;
+  }
+  p {
+    font-size: 14px;
+    margin: 0;
   }
 }
 .option-profile {

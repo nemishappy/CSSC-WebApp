@@ -12,7 +12,7 @@
         <router-link
           class="link"
           v-else
-          :to="{ name: 'blog-id', params: { id: this.post.blogID } }"
+          :to="{ name: 'blogs-id', params: { id: this.post.blogID } }"
         >
           View The Post<v-icon class="icon">arrow_forward</v-icon>
         </router-link>

@@ -5,18 +5,20 @@
       <p class="subtitle-text">{{ post.blogSubtitle }}</p>
       <div class="d-flex align-center justify-space-between my-3">
         <div class="d-flex align-center" v-if="user">
-          <v-avatar size="48">
-            <img
-              v-if="!user.pictureUrl"
-              class="avatar"
-              src="~/assets/profile.png"
-              alt=""
-            />
-            <img v-else :src="user.pictureUrl" class="avatar" alt="" />
-          </v-avatar>
-          <div class="mx-3 name-text" v-if="user.name">@{{ user.name }}</div>
-          <div class="mx-3 name-text" v-else>
-            {{ user.firstname }} {{ user.lastname }}
+          <div class="d-flex align-center profile" @click="toProfile">
+            <v-avatar size="48">
+              <img
+                v-if="!user.pictureUrl"
+                class="avatar"
+                src="~/assets/profile.png"
+                alt=""
+              />
+              <img v-else :src="user.pictureUrl" class="avatar" alt="" />
+            </v-avatar>
+            <div class="mx-3 text-primary name-text" v-if="user.name">@{{ user.name }}</div>
+            <div class="mx-3 text-primary name-text" v-else>
+              {{ user.firstname }} {{ user.lastname }}
+            </div>
           </div>
           <div class="mr-3 name-text">CS {{ user.batch }}</div>
           <div class="date-text">
@@ -40,8 +42,8 @@
       <div class="d-flex">
         <h3>
           More from
-          <div v-if="user.name">@{{ user.name }}</div>
-          <div v-else>{{ user.firstname }} {{ user.lastname }}</div>
+          <div v-if="user.name" class="profile text-primary" @click="toProfile">@{{ user.name }}</div>
+          <div v-else class="profile text-primary" @click="toProfile">{{ user.firstname }} {{ user.lastname }}</div>
         </h3>
       </div>
       <div>
@@ -61,7 +63,8 @@ export default {
   data() {
     return {
       routeID: '',
-      post: {blogTitle:''},
+      post: { blogTitle: '' },
+      uid:'',
       user: '',
     }
   },
@@ -70,7 +73,6 @@ export default {
     await this.getPost()
   },
   methods: {
-    
     async getPost() {
       const dataBase = this.$fire.firestore
         .collection('blogPosts')
@@ -84,6 +86,7 @@ export default {
               .collection('users')
               .doc(doc.data().profileId)
             await userDataBase.get().then((doc) => {
+              this.uid = doc.id
               this.user = doc.data()
             })
           } else {
@@ -95,6 +98,12 @@ export default {
           console.log('Error getting document:', error)
           this.$router.push({ name: 'home' })
         })
+    },
+    toProfile() {
+      this.$router.push({
+        name: 'profile-id',
+        params: { id: this.uid },
+      })
     },
   },
 }
@@ -111,14 +120,14 @@ export default {
     max-width: 1000px;
     padding: 60px 50px;
   }
-  .subtitle-text{
+  .subtitle-text {
     font-size: 18px;
   }
-  .name-text{
+  .name-text {
     font-size: 18px;
     align-self: center;
   }
-  .date-text{
+  .date-text {
     font-size: 14px;
     align-self: center;
   }
@@ -140,7 +149,7 @@ export default {
     }
   }
 }
-.no-uppercase {
-  text-transform: none;
+.profile{
+  cursor: pointer;
 }
 </style>

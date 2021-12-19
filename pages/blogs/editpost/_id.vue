@@ -177,12 +177,6 @@ export default {
           })
           return
         }
-        this.error = true
-        this.errorMsg = 'Please ensure you uploaded a cover photo!'
-        setTimeout(() => {
-          this.error = false
-        }, 5000)
-        return
       }
       this.error = true
       this.errorMsg = 'Please ensure Blog Title & Blog Post has been filled!'

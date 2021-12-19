@@ -65,6 +65,9 @@ export default {
   color: red;
   background-color: transparent !important;
 }
+.no-uppercase {
+  text-transform: none;
+}
 .blog-card-wrap {
   position: relative;
   padding: 80px 16px;
