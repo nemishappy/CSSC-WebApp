@@ -5,6 +5,15 @@ export const state = () => ({
     message: '',
   },
   overlay: false,
+  photoPreview: {
+    isShow: false,
+    blogPhotoFileURL: '',
+  },
+  post:{
+    blogTitle:'',
+    blogSubtitile: '',
+    blogHTML: '',
+  },
   user: null,
   userLoadded: false,
 })
@@ -21,6 +30,12 @@ export const getters = {
   },
   getUserLoadded(state) {
     return state.userLoadded
+  },
+  getPhotoPreview(state) {
+    return state.photoPreview
+  },
+  getPost(state) {
+    return state.post
   },
 }
 
@@ -40,6 +55,12 @@ export const mutations = {
   SET_USERLOADDED(state, payload) {
     state.userLoadded = payload
   },
+  SET_PHOTOPREVIEW(state, payload) {
+    state.photoPreview = { ...state.photoPreview, ...payload }
+  },
+  SET_POST(state, payload){
+    state.post = { ...state.post, ...payload }
+  }
 }
 
 export const actions = {
@@ -48,6 +69,12 @@ export const actions = {
   },
   toggleOverlay({ commit }) {
     commit('SET_OVERLAY')
+  },
+  setPhotoPreview({ commit }, data) {
+    commit('SET_PHOTOPREVIEW', data)
+  },
+  setPost({ commit }, data) {
+    commit('SET_POST', data)
   },
   async onAuthStateChangedAction({ commit, dispatch }, { authUser, claims }) {
     commit('SET_USERLOADDED', false)
@@ -73,19 +100,6 @@ export const actions = {
         if (doc.exists) {
           var obj = doc.data()
           obj['uid'] = data
-          // commit('SET_USER', {
-          //   uid: data.uid,
-          //   email: doc.data().email,
-          //   firstname: doc.data().firstname,
-          //   lastname: doc.data().lastname,
-          //   name: doc.data().name,
-          //   bio: doc.data().bio,
-          //   pictureUrl: doc.data().pictureUrl,
-          //   facebook: doc.data().facebook,
-          //   line: doc.data().line,
-          //   github: doc.data().github,
-          //   linkedin: doc.data().linkedin,
-          // })
           commit('SET_USER', obj)
         } else {
           console.log('No such user!')

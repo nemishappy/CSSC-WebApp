@@ -16,7 +16,7 @@
           <NuxtLink to="/blogs"> <p>Blogs</p> </NuxtLink>
         </div>
         <div v-if="user" class="option">
-          <NuxtLink to="/createpost">
+          <NuxtLink to="/blogs/createpost">
             <p>Create Post</p>
           </NuxtLink>
         </div>
@@ -81,7 +81,7 @@
                 </v-list-item>
                 <v-list-item>
                   <div class="option-profile" @click="menu = false">
-                    <NuxtLink to="/editprofile">
+                    <NuxtLink to="/profile/editprofile">
                       <p>Settings</p>
                     </NuxtLink>
                   </div>

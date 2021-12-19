@@ -169,9 +169,7 @@ export default {
   methods: {
     fileChange() {
       if (this.file) {
-        this.userEdit.pictureUrl = URL.createObjectURL(this.file)
-        console.log(this.file)
-        console.log(URL.createObjectURL(this.file))
+        this.userEdit.pictureUrl = URL.createObjectURL(this.file)        
         return
       }
       this.userEdit.pictureUrl = ''
@@ -192,6 +190,20 @@ export default {
           const docRef = storageRef.child(
             `documents/Profile/picture/${this.file.name}`
           )
+          // delete old picture
+          if (this.$store.getters.getUser.pictureUrl) {
+            const storageRefDelete = this.$fire.storage.refFromURL(
+              this.$store.getters.getUser.pictureUrl
+            )
+            await storageRefDelete
+              .delete()
+              .then(() => {
+                console.log('File deleted successfully')
+              })
+              .catch((error) => {
+                console.log('error: ', err)
+              })
+          }
           docRef.put(this.file).on(
             'state_changed',
             (snapshot) => {
@@ -208,7 +220,10 @@ export default {
                 .update(this.userEdit)
                 .then(() => {
                   console.log('Document successfully updated!')
-                  this.$store.dispatch('setUserByUID', this.$store.getters.getUser.uid)
+                  this.$store.dispatch(
+                    'setUserByUID',
+                    this.$store.getters.getUser.uid
+                  )
                   this.$store.dispatch('setDialog', {
                     isShow: true,
                     title: 'Successfully updated!',
@@ -234,7 +249,10 @@ export default {
           .update(this.userEdit)
           .then(() => {
             console.log('Document successfully updated!')
-            this.$store.dispatch('setUserByUID', this.$store.getters.getUser.uid)
+            this.$store.dispatch(
+              'setUserByUID',
+              this.$store.getters.getUser.uid
+            )
             this.$store.dispatch('setDialog', {
               isShow: true,
               title: 'Successfully updated!',

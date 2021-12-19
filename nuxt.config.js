@@ -28,10 +28,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['quill/dist/quill.snow.css',],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '~plugins/nuxt-quill-plugin', ssr: false }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -43,7 +43,7 @@ export default {
     '@nuxtjs/svg',
   ],
   router: {
-    middleware: ['auth']
+    middleware: ['auth'],
   },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -63,10 +63,10 @@ export default {
         },
         services: {
           auth: {
-            initialize:{
+            initialize: {
               onAuthStateChangedAction: 'onAuthStateChangedAction',
-              subscribeManually: false
-            }
+              subscribeManually: false,
+            },
           },
           firestore: true,
           storage: true,
@@ -84,7 +84,7 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
-    
+
     theme: {
       dark: false,
       themes: {
