@@ -1,6 +1,6 @@
 <template>
   <div class="post-view">
-      <h2 class="mt-4 ml-4">Blog Preview</h2>
+    <h2 class="mt-4 ml-4">Blog Preview</h2>
     <div class="container quillWrapper">
       <h2>{{ post.blogTitle }}</h2>
       <p>{{ post.blogSubtitile }}</p>
@@ -29,6 +29,9 @@
       <img v-if="blogCoverPhoto" :src="blogCoverPhoto" alt="" />
       <div class="post-content ql-editor" v-html="post.blogHTML"></div>
     </div>
+    <v-btn text class="d-flex justify-center align-center mb-6 ml-3" @click="to">
+      <v-icon>arrow_back</v-icon> Back to Creat Post
+    </v-btn>
   </div>
 </template>
 
@@ -49,6 +52,11 @@ export default {
     user() {
       return this.$store.getters.getUser
     },
+  },
+  methods: {
+    to() {
+        this.$router.go(-1);
+      },
   },
 }
 </script>

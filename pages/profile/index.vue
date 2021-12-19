@@ -18,11 +18,14 @@
         </div>
         <v-list-item-content>
           <v-list-item-title class="real-name">
-            {{ user.firstname }} {{ user.lastname }} <span class="writer-name" v-if="user.name">({{user.name}})</span>
+            {{ user.firstname }} {{ user.lastname }}
+            <span class="writer-name" v-if="user.name">({{ user.name }})</span>
           </v-list-item-title>
 
           <v-list-item-subtitle>CS {{ user.batch }}</v-list-item-subtitle>
-          <v-list-item-subtitle><v-icon small>email</v-icon> {{ user.email }}</v-list-item-subtitle>
+          <v-list-item-subtitle
+            ><v-icon small>email</v-icon> {{ user.email }}</v-list-item-subtitle
+          >
           <div class="d-flex mt-2">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -94,7 +97,7 @@
       <div class="d-flex flex-wrap">
         <BlogCard
           :post="post"
-          v-for="(post, index) in sampleCards"
+          v-for="(post, index) in ownBlogPosts"
           :key="index"
         />
       </div>
@@ -117,10 +120,20 @@ export default {
     user() {
       return this.$store.getters.getUser
     },
+    editPost: {
+      get() {
+        return this.$store.getters.getEditPost
+      },
+      set(payload) {
+        this.$store.dispatch('toggleEditPost')
+      },
+    },
+    ownBlogPosts(){
+      return this.$store.getters.getBlogPosts;
+    }
   },
   data() {
     return {
-      editPost: true,
       sampleCards: [
         { blogTitle: 'Blog Card 1', blockCoverphoto: 'stock-1', writer: 'nnn' },
         { blogTitle: 'Blog Card 2', blockCoverphoto: 'stock-1', writer: 'nnn' },
@@ -134,24 +147,27 @@ export default {
       linkedinUrl: '',
     }
   },
-  methods: {
-    facebook() {
-      window.open(this.facebookUrl, '_blank')
-    },
-  },
   mounted() {
     this.facebookUrl = 'https://www.facebook.com/' + this.user.facebook
     this.lineUrl = 'http://line.me/ti/p/~' + this.user.line
     this.githubUrl = 'https://github.com/' + this.user.github
     this.linkedinUrl = 'https://www.linkedin.com/in/' + this.user.linkedin
   },
+  methods: {
+    facebook() {
+      window.open(this.facebookUrl, '_blank')
+    },
+  },
+  beforeDestroy() {
+    if(!this.editPost)this.$store.dispatch('toggleEditPost')
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.real-name{
+.real-name {
   font-size: 24px;
-  .writer-name{
+  .writer-name {
     font-size: 20px;
   }
 }

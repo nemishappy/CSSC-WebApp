@@ -1,8 +1,8 @@
 <template>
-  <div class="create-post">
+  <div class="create-post" v-if="blogHTML">
     <BlogCoverPreview />
     <Overlay />
-    <h2 class="mt-4 ml-4">Create Post</h2>
+    <h2 class="mt-4 ml-4">Edit Post</h2>
     <div class="container">
       <div class="blog-info">
         <v-text-field
@@ -44,7 +44,7 @@
         <p><span>Error: </span>{{ this.errorMsg }}</p>
       </div>
       <div class="blog-actions">
-        <button @click="uploadBlog">Publish Blog</button>
+        <button @click="updateBlog">Publish Blog</button>
         <router-link class="router-button" :to="{ name: 'blogs-blogpreview' }"
           >Post Preview</router-link
         >
@@ -71,6 +71,7 @@ export default {
       fileUrl: null,
       error: null,
       errorMsg: null,
+      routeID: '',
     }
   },
   components: {
@@ -112,14 +113,14 @@ export default {
       })
     },
 
-    uploadBlog() {
+    async updateBlog() {
       if (
         this.blogTitle.length !== 0 &&
         this.blogHTML.length !== 0 &&
         this.blogSubtitle.length !== 0
       ) {
+        this.$store.dispatch('toggleOverlay')
         if (this.file) {
-          this.$store.dispatch('toggleOverlay')
           const storageRef = this.$fire.storage.ref()
           const docRef = storageRef.child(
             `documents/BlogCoverPhotos/${this.file.name}`
@@ -135,41 +136,45 @@ export default {
             },
             async () => {
               const downloadURL = await docRef.getDownloadURL()
-              const timestamp = await Date.now()
               const dataBase = await this.$fire.firestore
                 .collection('blogPosts')
-                .doc()
+                .doc(this.routeID)
 
-              await dataBase.set({
-                blogID: dataBase.id,
+              await dataBase.update({
                 blogHTML: this.blogHTML,
                 blogCoverPhoto: downloadURL,
                 blogCoverPhotoName: this.file.name,
                 blogTitle: this.blogTitle,
                 blogSubtitle: this.blogSubtitle,
-                profileId: this.profileId,
-                date: timestamp,
               })
 
-              const userDataBase = await this.$fire.firestore
-                .collection('users')
-                .doc(this.profileId)
-                .collection('posts')
-                .doc(dataBase.id)
-              await userDataBase.set({ blogTitle: this.blogTitle })
-
+              this.$store.dispatch('updatePost',this.routeID)
               this.$store.dispatch('toggleOverlay')
               this.$store.dispatch('clearPost')
-              // this.$router.push({
-              //   name: 'ViewBlog',
-              //   params: { blogid: dataBase.id },
-              // })
               this.$router.push({
                 name: 'blogs-id',
-                params: { id: dataBase.id },
+                params: { id: this.routeID },
               })
             }
           )
+          return
+        } else {
+          const dataBase = await this.$fire.firestore
+            .collection('blogPosts')
+            .doc(this.routeID)
+
+          await dataBase.update({
+            blogHTML: this.blogHTML,
+            blogTitle: this.blogTitle,
+            blogSubtitle: this.blogSubtitle,
+          })
+          this.$store.dispatch('updatePost',this.routeID)
+          this.$store.dispatch('toggleOverlay')
+          this.$store.dispatch('clearPost')
+          this.$router.push({
+            name: 'blogs-id',
+            params: { id: this.routeID },
+          })
           return
         }
         this.error = true
@@ -227,136 +232,50 @@ export default {
       },
     },
   },
+  async created() {
+    this.routeID = this.$route.params.id
+    const userDataBase = await this.$fire.firestore
+      .collection('users')
+      .doc(this.profileId)
+      .collection('posts')
+      .doc(this.routeID)
+    await userDataBase
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          console.log('No such post!, not owener')
+          this.$router.push({ name: 'home' })
+        }
+      })
+      .catch((error) => {
+        console.log('Error getting document:', error)
+        this.$router.push({ name: 'home' })
+      })
+  },
+  async mounted() {
+    const dataBase = this.$fire.firestore
+      .collection('blogPosts')
+      .doc(this.routeID)
+    await dataBase
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          this.$store.dispatch('setPost', doc.data())
+          this.$store.dispatch('setPhotoPreview', {
+            fileName: doc.data().blogCoverPhotoName,
+            blogPhotoFileURL: doc.data().blogCoverPhoto,
+          })
+        } else {
+          console.log('No such post!')
+          this.$router.push({ name: 'home' })
+        }
+      })
+      .catch((error) => {
+        console.log('Error getting document:', error)
+        this.$router.push({ name: 'home' })
+      })
+  },
 }
 </script>
 
-<style lang="scss">
-.create-post {
-  position: relative;
-  height: 100%;
-
-  button {
-    margin-top: 0;
-  }
-
-  .router-button {
-    text-decoration: none;
-    color: #fff;
-  }
-
-  label,
-  button,
-  .router-button {
-    transition: 0.5s ease-in-out all;
-    align-self: center;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 20px;
-    padding: 12px 24px;
-    color: #fff;
-    background-color: #303030;
-    text-decoration: none;
-
-    &:hover {
-      background-color: rgba(48, 48, 48, 0.7);
-    }
-  }
-
-  .container {
-    position: relative;
-    height: 100%;
-    padding: 10px 25px 60px;
-  }
-
-  // error styling
-  .invisible {
-    opacity: 0 !important;
-  }
-
-  .err-message {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    color: #fff;
-    margin-bottom: 10px;
-    background-color: #303030;
-    opacity: 1;
-    transition: 0.5s ease all;
-
-    p {
-      font-size: 14px;
-    }
-
-    span {
-      font-weight: 600;
-    }
-  }
-  .button-inactive {
-    pointer-events: none !important;
-    cursor: none !important;
-    background-color: rgba(128, 128, 128, 0.5) !important;
-  }
-  .blog-info {
-    display: flex;
-    margin-bottom: 32px;
-
-    .text-field {
-      max-width: 300px;
-    }
-
-    .upload-file {
-      flex: 1;
-      margin-left: 16px;
-      position: relative;
-      display: flex;
-
-      input {
-        display: none;
-      }
-
-      .preview {
-        margin-left: 16px;
-        text-transform: initial;
-      }
-
-      span {
-        font-size: 12px;
-        margin-left: 16px;
-        align-self: center;
-      }
-    }
-  }
-
-  .editor {
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-
-    .quillWrapper {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .ql-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: scroll;
-    }
-
-    .ql-editor {
-      padding: 20px 16px 30px;
-    }
-  }
-
-  .blog-actions {
-    margin-top: 32px;
-
-    button {
-      margin-right: 16px;
-    }
-  }
-}
-</style>
+<style lang="scss"></style>

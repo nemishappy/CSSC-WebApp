@@ -1,14 +1,12 @@
 <template>
   <div>
     <h2 class="ma-3">Blogs Post</h2>
-    <div class="toggle-edit ma-3">
-      <span>Toggle Editing Post</span>
-      <input type="checkbox" v-model="editPost" />
-    </div>
-    <div class="d-flex flex-wrap">
+    
+    <div class="d-flex align-content-space-around flex-wrap">
       <BlogCard
         :post="post"
-        v-for="(post, index) in sampleCards"
+        class="mx-auto"
+        v-for="(post, index) in blogPosts"
         :key="index"
       />
     </div>
@@ -26,16 +24,13 @@ export default {
   components: {
     BlogCard,
   },
-  data() {
-    return {        
-      editPost: true,
-      sampleCards: [
-        { blogTitle: 'Blog Card 1', blockCoverphoto: 'stock-1', writer: 'nnn' },
-        { blogTitle: 'Blog Card 2', blockCoverphoto: 'stock-1', writer: 'nnn' },
-        { blogTitle: 'Blog Card 3', blockCoverphoto: 'stock-1', writer: 'nnn' },
-        { blogTitle: 'Blog Card 3', blockCoverphoto: 'stock-1', writer: 'nnn' },
-      ],
+  computed:{
+    blogPosts(){
+      return this.$store.getters.getBlogPosts;
     }
+  },
+  async mounted() {
+    await this.$store.dispatch('setBlogPosts')
   },
 }
 </script>
@@ -81,5 +76,25 @@ export default {
     background: #fff;
     left: 26px;
   }
+}
+blockquote {
+    margin: 0;
+}
+
+blockquote  {
+    padding: 15px;
+    background: #eee;
+    border-radius: 5px;
+}
+
+blockquote ::before {
+    content: '\201C';
+}
+
+blockquote ::after {
+    content: '\201D';
+}
+.ql-editor p, .ql-editor ol, .ql-editor ul, .ql-editor pre, .ql-editor blockquote, .ql-editor h1, .ql-editor h2, .ql-editor h3, .ql-editor h4, .ql-editor h5, .ql-editor h6{
+  padding: 15px;  
 }
 </style>

@@ -1,14 +1,45 @@
 <template>
-  <v-card class="mx-auto my-3 blog-card" max-width="374">
+  <v-card
+    class="mx-auto my-3 blog-card"
+    v-if="user"
+  >
     <v-img
       class="white--text align-end"
       height="200px"
+      width="374"
+      v-if="!post.blogCoverPhoto"
       src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
     >
-      <div class="card-icon"><v-icon class="icon">edit</v-icon></div>
-      <div class="card-icon"><v-icon class="icon">delete</v-icon></div>
+      <div v-if="!editPost">
+        <div class="card-icon"><v-icon class="icon">edit</v-icon></div>
+        <div class="card-icon"><v-icon class="icon">delete</v-icon></div>
+      </div>
     </v-img>
-    <v-card-subtitle class="pb-0">{{ post.writer }}</v-card-subtitle>
+    <v-img
+      class="white--text align-end"
+      height="200px"
+      width="374"
+      v-else
+      :src="post.blogCoverPhoto"
+    >
+      <div v-if="!editPost">
+        <div class="card-icon"><v-icon class="icon" @click="editBlogPost()">edit</v-icon></div>
+        <div class="card-icon"><v-icon class="icon">delete</v-icon></div>
+      </div>
+    </v-img>
+    <v-card-subtitle class="pb-0 d-flex align-center">
+      <v-avatar size="36">
+        <img
+          v-if="!user.pictureUrl"
+          class="avatar"
+          src="~/assets/profile.png"
+          alt=""
+        />
+        <img v-else :src="user.pictureUrl" class="avatar" alt="" />
+      </v-avatar>
+      <div class="mx-3" v-if="user.name">@{{ user.name }}</div>
+      <div class="mx-3" v-else>{{ user.firstname }} {{ user.lastname }}</div>
+    </v-card-subtitle>
     <!-- <v-list>
       <v-list-item>
         <v-list-item-avatar>
@@ -23,14 +54,13 @@
     <v-card-title>{{ post.blogTitle }}</v-card-title>
 
     <v-card-text class="text--primary">
-      <div>Whitehaven Beach</div>
-      <div>Whitsunday Island, Whitsunday Islands</div>
+      {{ post.blogSubtitle }}
     </v-card-text>
 
     <v-card-actions>
       <router-link
         class="link"
-        :to="{ name: 'ViewBlog', params: { blogid: this.post.blogID } }"
+        :to="{ name: 'blogs-id', params: { id: this.post.blogID } }"
       >
         View The Post<v-icon class="icon">arrow_forward</v-icon>
       </router-link>
@@ -41,6 +71,32 @@
 <script>
 export default {
   props: ['post'],
+  computed: {
+    editPost() {
+      return this.$store.getters.getEditPost
+    },
+  },
+  data() {
+    return {
+      user: null,
+    }
+  },
+  async mounted() {
+    const userDataBase = this.$fire.firestore
+      .collection('users')
+      .doc(this.post.profileId)
+    await userDataBase.get().then((doc) => {
+      this.user = doc.data()
+    })
+  },
+  methods: {
+    editBlogPost(){
+      this.$router.push({
+        name: 'blogs-editpost-id',
+        params: { id: this.post.blogID },
+      })
+    }
+  },
 }
 </script>
 
@@ -56,6 +112,8 @@ export default {
   position: absolute;
   top: 12px;
   right: 55px;
+
+  transition: 0.5s ease all;
   &:nth-child(even) {
     right: 11px;
   }
@@ -67,7 +125,8 @@ export default {
   flex-direction: column;
   border-radius: 8px;
   background-color: #fff;
-  min-height: 400px;
+
+  min-width: 300px;
   transition: 0.5s ease all;
 
   &:hover {
@@ -76,12 +135,15 @@ export default {
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   img {
-    display: block;
     border-radius: 8px 8px 0 0;
     z-index: 1;
-    width: 100%;
-    min-height: 200px;
+    max-height: 200px;
+    max-width: 300px;
+    &.avatar {
+      min-height: 0px;
+      
     object-fit: cover;
+    }
   }
   .link {
     display: inline-flex;

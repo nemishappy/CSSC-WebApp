@@ -5,15 +5,19 @@ export const state = () => ({
     message: '',
   },
   overlay: false,
+  editPost: true,
+  file: null,
   photoPreview: {
     isShow: false,
     blogPhotoFileURL: '',
   },
-  post:{
-    blogTitle:'',
-    blogSubtitile: '',
+  post: {
+    blogTitle: '',
+    blogSubtitle: '',
     blogHTML: '',
   },
+  blogPosts: [],
+  postLoaded: false,
   user: null,
   userLoadded: false,
 })
@@ -24,6 +28,9 @@ export const getters = {
   },
   getOverlay(state) {
     return state.overlay
+  },
+  getEditPost(state) {
+    return state.editPost
   },
   getUser(state) {
     return state.user
@@ -37,6 +44,21 @@ export const getters = {
   getPost(state) {
     return state.post
   },
+  getFile(state) {
+    return state.file
+  },
+  getBlogPosts(state) {
+    return state.blogPosts
+  },
+  getBlogPostHome(state) {
+    return state.blogPosts.slice(0, 2)
+  },
+  getBlogPostCards(state) {
+    return state.blogPosts.slice(2, 6)
+  },
+  getPostLoaded(state) {
+    return state.postLoaded
+  },
 }
 
 export const mutations = {
@@ -49,18 +71,45 @@ export const mutations = {
   SET_OVERLAY(state) {
     state.overlay = !state.overlay
   },
+  SET_EDITPOST(state) {
+    state.editPost = !state.editPost
+  },
   SET_USER(state, payload) {
     state.user = payload
   },
   SET_USERLOADDED(state, payload) {
     state.userLoadded = payload
   },
+  SET_FILE(state, payload) {
+    state.file = payload
+  },
   SET_PHOTOPREVIEW(state, payload) {
     state.photoPreview = { ...state.photoPreview, ...payload }
   },
-  SET_POST(state, payload){
+  SET_POST(state, payload) {
     state.post = { ...state.post, ...payload }
-  }
+  },
+  SET_BLOGPOSTS(state, payload) {
+    state.blogPosts.push(payload)
+  },
+  SET_POSTLOADED(state, payload) {
+    state.postLoaded = payload
+  },
+  CLEAR_EDITPOST(state) {
+    state.file = null
+    state.photoPreview = {
+      isShow: false,
+      blogPhotoFileURL: '',
+    }
+    state.post = {
+      blogTitle: '',
+      blogSubtitle: '',
+      blgHTML: '',
+    }
+  },
+  FILTER_BLOGPOST(state, payload) {
+    state.blogPosts = state.blogPosts.filter((post) => post.blogID !== payload);
+  },
 }
 
 export const actions = {
@@ -70,11 +119,20 @@ export const actions = {
   toggleOverlay({ commit }) {
     commit('SET_OVERLAY')
   },
+  toggleEditPost({ commit }) {
+    commit('SET_EDITPOST')
+  },
+  setFile({ commit }, data) {
+    commit('SET_FILE', data)
+  },
   setPhotoPreview({ commit }, data) {
     commit('SET_PHOTOPREVIEW', data)
   },
   setPost({ commit }, data) {
     commit('SET_POST', data)
+  },
+  clearPost({ commit }, data) {
+    commit('CLEAR_EDITPOST')
   },
   async onAuthStateChangedAction({ commit, dispatch }, { authUser, claims }) {
     commit('SET_USERLOADDED', false)
@@ -109,5 +167,30 @@ export const actions = {
         console.log('Error getting document:', error)
       })
     commit('SET_USERLOADDED', true)
+  },
+  async setBlogPosts({ commit, getters }) {
+    commit('SET_POSTLOADED', false)
+    const dataBase = this.$fire.firestore
+      .collection('blogPosts')
+      .orderBy('date', 'desc')
+    const dbResults = await dataBase.get()
+    dbResults.forEach((doc) => {
+      if (!getters.getBlogPosts.some((post) => post.blogID === doc.id)) {
+        const data = {
+          blogID: doc.data().blogID,
+          blogCoverPhoto: doc.data().blogCoverPhoto,
+          blogTitle: doc.data().blogTitle,
+          blogSubtitle: doc.data().blogSubtitle,
+          blogDate: doc.data().date,
+          profileId: doc.data().profileId,
+        }
+        commit('SET_BLOGPOSTS', data)
+      }
+    })
+    commit('SET_POSTLOADED', true)
+  },
+  async updatePost({ commit, dispatch }, data) {
+    commit("FILTER_BLOGPOST", data);
+    await dispatch("setBlogPosts");
   },
 }

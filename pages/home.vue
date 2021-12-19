@@ -1,7 +1,7 @@
 <template>
   <div>
     <BlogPost v-if="!user" :post="welcomeScreen" />
-    <BlogPost :post="post" v-for="(post, index) in sample" :key="index" />
+    <BlogPost :post="post" v-for="(post, index) in blogPostHome" :key="index" />
     <div class="blog-card-wrap">
       <div class="container">
         <h3>View More Recent Blogs</h3>
@@ -10,7 +10,7 @@
             <div class="blog-cards">
               <BlogCard
                 :post="post"
-                v-for="(post, index) in sampleCards"
+                v-for="(post, index) in blogPostCards"
                 :key="index"
               />
             </div>
@@ -43,7 +43,13 @@ export default {
   computed:{
     user() {
       return this.$store.getters.getUser
-    }
+    },
+    blogPostHome() {
+      return this.$store.getters.getBlogPostHome;
+    },
+    blogPostCards() {
+      return this.$store.getters.getBlogPostCards;
+    },
   },
 
   data() {
@@ -55,28 +61,10 @@ export default {
         welcomeScreen: true,
         photo: 'coding',
       },
-      sample: [
-        {
-          blogTitle: 'Test',
-          blogHTML:
-            'Weekly blog articles with all things programming including HTML, CSS, JavaScript and more. Register today to never miss a post!',
-
-          blogCoverPhoto: 'coding',
-        },
-        {
-          blogTitle: 'Test!',
-          blogHTML:
-            'Weekly blog articles with all things programming including HTML, CSS, JavaScript and more. Register today to never miss a post!',
-
-          blogCoverPhoto: 'coding',
-        },
-      ],
-      sampleCards: [
-        { blogTitle: 'Blog Card 1', blockCoverphoto: 'stock-1', writer: 'nnn' },
-        { blogTitle: 'Blog Card 2', blockCoverphoto: 'stock-1', writer: 'nnn' },
-        { blogTitle: 'Blog Card 3', blockCoverphoto: 'stock-1', writer: 'nnn' },
-      ],
     }
+  },
+  async mounted() {
+    await this.$store.dispatch('setBlogPosts')
   },
 }
 </script>
