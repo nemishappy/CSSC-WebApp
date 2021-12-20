@@ -93,7 +93,7 @@
           >
             Edit Profile
           </v-btn>
-          <v-btn v-else rounded class="mb-3 mr-6 no-uppercase" color="primary" >
+          <v-btn v-else rounded class="mb-3 mr-6 no-uppercase" color="primary">
             Follow
           </v-btn>
         </dir>
@@ -105,13 +105,16 @@
         <span>Toggle Editing Post</span>
         <input type="checkbox" v-model="editPost" />
       </div>
-      <div class="d-flex flex-wrap">
+      <div v-if="ownBlogPosts" class="d-flex flex-wrap">
         <BlogCard
           :post="post"
           v-for="(post, index) in ownBlogPosts"
           v-on:deletePost="deletePost"
           :key="index"
         />
+      </div>
+      <div v-else class="d-flex justify-center pa-4">
+        <p>No recently post.</p>
       </div>
     </div>
   </div>

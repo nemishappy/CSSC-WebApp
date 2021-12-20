@@ -1,7 +1,8 @@
 <template>
   <div>
-    <BlogPost v-if="!user" :post="welcomeScreen" />
-    <BlogPost v-else :post="welcomeScreen" />
+    <BlogPost v-if="!user.uid" :post="welcomeScreen" />
+    <div v-else />
+    <!-- v-else for fix DOMException -->
     <BlogPost :post="post" v-for="(post, index) in blogPostHome" :key="index" />
     <div class="blog-card-wrap">
       <div class="container">
@@ -20,7 +21,7 @@
       </div>
     </div>
     <v-container>
-      <div v-if="!user" class="updates">
+      <div v-if="!user.uid" class="updates">
         <div class="container">
           <h2>never miss a post. Register for your free account today!</h2>
           <router-link class="router-button" to="#">
@@ -29,6 +30,8 @@
           </router-link>
         </div>
       </div>
+      <div v-else></div> 
+      <!-- v-else for fix DOMException -->
     </v-container>
   </div>
 </template>

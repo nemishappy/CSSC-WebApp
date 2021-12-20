@@ -5,9 +5,9 @@
         class="hidden-md-and-up"
         @click="toggleMobileNav"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-left title" @click="toHome"
-        >CSSC</v-toolbar-title
-      >
+      <v-toolbar-title class="title" @click="toHome">
+        <img src="~/assets/cssc-logo.png" alt="cssc-logo" width="60px" />
+      </v-toolbar-title>
       <v-spacer></v-spacer>
 
       <div v-if="userLoadded" class="options hidden-sm-and-down">
@@ -152,7 +152,7 @@
               </div></v-list-item-title
             >
           </v-list-item>
-          
+
           <div v-if="user.uid">
             <v-divider></v-divider>
             <v-list-item>
@@ -241,6 +241,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .title {
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 .options {

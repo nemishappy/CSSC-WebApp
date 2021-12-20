@@ -2,16 +2,19 @@
   <div>
     <h2 class="ma-3">Saved Post</h2>
     <div class="toggle-edit ma-3">
-      <span>Toggle Editing Post</span>
+      <span>Toggle Editing Saved Post</span>
       <input type="checkbox" v-model="editPost" />
     </div>
-    <div class="d-flex align-content-space-around flex-wrap">
+    <div v-if="blogPosts" class="d-flex align-content-space-around flex-wrap">
       <BlogCardSafe
         :post="post"
         class="mx-auto"
         v-for="(post, index) in blogPosts"
         :key="index"
       />
+    </div>
+    <div v-else class="d-flex justify-center pa-4">
+      <p>No post saved.</p>
     </div>
   </div>
 </template>
@@ -41,7 +44,7 @@ export default {
     },
   },
   async mounted() {
-    if(this.$store.getters.getUser.uid){
+    if (this.$store.getters.getUser.uid) {
       await this.$store.dispatch('setSavedPosts')
       return
     }

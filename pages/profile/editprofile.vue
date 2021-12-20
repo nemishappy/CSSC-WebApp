@@ -145,21 +145,13 @@ export default {
     Overlay,
   },
   created() {
-    // this.user.email = await this.$store.getters.getUser.email
-    // this.user.bio = this.$store.getters.getUser.bio
-    // this.user.pictureUrl = this.$store.getters.getUser.pictureUrl
-    // this.user.firstname = this.$store.getters.getUser.firstname
-    // this.user.lastname = this.$store.getters.getUser.lastname
-    // this.user.facebook = this.$store.getters.getUser.facebook
-    // this.user.line = this.$store.getters.getUser.line
-    // this.user.github = this.$store.getters.getUser.github
-    // this.user.linkedin = this.$store.getters.getUser.linkedin
-    // var name = this.$store.getters.getUser.name
-    // if (name) {
-    //   this.name = name
-    // }
     const user = { ...this.$store.getters.getUser }
     this.userEdit = user
+  },
+  mounted() {
+    if (!this.$store.getters.getUser.uid) {
+      this.$router.push({ name: 'home' })
+    }
   },
   computed: {
     userLoadded() {
@@ -169,7 +161,7 @@ export default {
   methods: {
     fileChange() {
       if (this.file) {
-        this.userEdit.pictureUrl = URL.createObjectURL(this.file)        
+        this.userEdit.pictureUrl = URL.createObjectURL(this.file)
         return
       }
       this.userEdit.pictureUrl = ''
@@ -282,7 +274,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.edit-container{
+.edit-container {
   max-width: 600px;
   margin: 16px auto;
   background-color: #fff;
