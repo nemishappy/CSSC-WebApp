@@ -5,7 +5,9 @@
         class="hidden-md-and-up"
         @click="toggleMobileNav"
       ></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-left title" @click="toHome">CSSC</v-toolbar-title>
+      <v-toolbar-title class="text-left title" @click="toHome"
+        >CSSC</v-toolbar-title
+      >
       <v-spacer></v-spacer>
 
       <div v-if="userLoadded" class="options hidden-sm-and-down">
@@ -20,7 +22,7 @@
             <p>Create Post</p>
           </NuxtLink>
         </div>
-        <div v-if="!user.uid" class="option">
+        <div v-else class="option">
           <NuxtLink to="/login">
             <p>login</p>
           </NuxtLink>
@@ -109,7 +111,9 @@
             </v-card>
           </v-menu>
         </div>
+        <div v-else></div>
       </div>
+      <div v-else class="options hidden-sm-and-down"></div>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense>
@@ -148,8 +152,9 @@
               </div></v-list-item-title
             >
           </v-list-item>
-          <v-divider></v-divider>
+          
           <div v-if="user.uid">
+            <v-divider></v-divider>
             <v-list-item>
               <v-list-item-title
                 ><div class="option-mobile">
@@ -186,6 +191,7 @@
               <v-btn class="no-uppercase" block @click="logout"> Logout </v-btn>
             </v-list-item>
           </div>
+          <div v-else></div>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -226,14 +232,15 @@ export default {
       this.menu = false
       // this.$router.push({ name: 'home' })
     },
-    toHome(){
+    toHome() {
       this.$router.push({ name: 'home' })
-    }
+    },
   },
+  mounted() {},
 }
 </script>
 <style lang="scss" scoped>
-.title{
+.title {
   cursor: pointer;
 }
 .options {

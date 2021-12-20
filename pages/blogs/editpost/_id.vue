@@ -60,7 +60,7 @@ import Overlay from '~/components/Overlay'
 export default {
   head() {
     return {
-      title: 'Create Post',
+      title: 'Edit Post',
     }
   },
   components: {
@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     textChange(content) {
-      console.log(content)
       this.blogHTML = content
     },
     fileChange() {

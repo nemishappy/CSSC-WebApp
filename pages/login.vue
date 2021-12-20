@@ -54,7 +54,6 @@ export default {
             this.error = false
             this.errorMsg = ''
             this.$router.push({ name: 'home' })
-            console.log(this.$fire.auth.currentUser.uid)
           })
           .catch((err) => {
             this.error = true

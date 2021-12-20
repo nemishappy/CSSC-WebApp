@@ -152,7 +152,6 @@ export const actions = {
       // Perform logout operations
       commit('SET_USER', {uid: ''})
       commit('SET_USERLOADDED', true)
-      console.log('logout')
       this.$router.push({ name: 'home' })
     } else {
       const { uid } = authUser
@@ -293,7 +292,7 @@ export const actions = {
     await userPost
       .delete()
       .then(() => {
-        console.log('Document successfully deleted!')
+        console.log('Successfully deleted!')
       })
       .catch((error) => {
         console.error('Error removing document: ', error)

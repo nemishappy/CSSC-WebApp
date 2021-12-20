@@ -79,7 +79,6 @@ export default {
   },
   methods: {
     textChange(content) {
-      console.log(content)
       this.blogHTML = content
     },
     fileChange() {

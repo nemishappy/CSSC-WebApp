@@ -21,7 +21,7 @@ import BlogCardSafe from '~/components/BlogCardSafe'
 export default {
   head() {
     return {
-      title: 'Blogs',
+      title: 'Saved',
     }
   },
   components: {
@@ -41,7 +41,11 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch('setSavedPosts')
+    if(this.$store.getters.getUser.uid){
+      await this.$store.dispatch('setSavedPosts')
+      return
+    }
+    this.$router.push({ name: 'home' })
   },
   beforeDestroy() {
     if (!this.editPost) this.$store.dispatch('toggleEditPost')

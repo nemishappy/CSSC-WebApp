@@ -1,6 +1,7 @@
 <template>
   <div>
     <BlogPost v-if="!user" :post="welcomeScreen" />
+    <BlogPost v-else :post="welcomeScreen" />
     <BlogPost :post="post" v-for="(post, index) in blogPostHome" :key="index" />
     <div class="blog-card-wrap">
       <div class="container">

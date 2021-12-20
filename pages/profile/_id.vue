@@ -89,11 +89,11 @@
             v-if="user.uid === routeID"
             class="mb-3 mr-6 no-uppercase"
             color="primary"
-            to="/editprofile"
+            to="/profile/editprofile"
           >
             Edit Profile
           </v-btn>
-          <v-btn v-else rounded class="mb-3 mr-6 no-uppercase" color="primary" to="/editprofile">
+          <v-btn v-else rounded class="mb-3 mr-6 no-uppercase" color="primary" >
             Follow
           </v-btn>
         </dir>

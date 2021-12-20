@@ -2,9 +2,9 @@
   <div class="profile" v-if="userLoadded">
     <Dialog />
     <Overlay />
-    <div class="container">
+    <div class="edit-container">
       <h2 class="ml-6 mt-3">Account Settings</h2>
-      <div class="d-flex flex-column mx-13 px-13 my-3">
+      <div class="d-flex flex-column px-13 my-3">
         <div class="d-flex flex-column my-3">
           <h3 class="mb-3">About you</h3>
 
@@ -175,7 +175,6 @@ export default {
       this.userEdit.pictureUrl = ''
     },
     async updateProfile() {
-      console.log(this.userEdit)
       if (
         this.userEdit.email !== '' &&
         this.userEdit.firstname !== '' &&
@@ -282,4 +281,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.edit-container{
+  max-width: 600px;
+  margin: 16px auto;
+  background-color: #fff;
+  padding: 12px 0;
+}
+</style>

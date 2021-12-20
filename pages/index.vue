@@ -1,9 +1,13 @@
 <template>
-  
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: 'IndexPage',
+  mounted() {
+    this.$router.push({ name: 'home' })
+  },
 }
 </script>
+
+<style lang="scss" scoped></style>
